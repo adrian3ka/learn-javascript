@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>Functions and Object</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function merge(root){
+            console.log(arguments);
+            console.log(arguments.length);
+            for (var i = 1; i < arguments.length; i++) {
+                console.log("Arguments >> ", i);
+                for (var key in arguments[i]) {
+                    console.log(key);
+                    console.log(root[key], " = ", arguments[i][key]);
+                    root[key] = arguments[i][key];
+                }
+            }
+            return root;
+        }
+        var merged = merge(
+            {name: "Batou"},
+            {city: "Niihama"});
+        assert(merged.name == "Batou", "The original name is intact.");
+        assert(merged.city == "Niihama", "And the city has been copied over.");
+
+        function multiMaxError(multi){
+            // will return error : arguments.slice is not a function
+            try {
+                return multi * Math.max.apply(Math, arguments.slice(1));
+            } catch (e) {
+                console.log(e);
+                 return false;
+            }
+        }
+        assert(multiMaxError(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)");
+
+        function multiMax(multi){
+            var restArgs = Array.prototype.slice.call(arguments, 1);
+            console.log(restArgs);
+            return multi * Math.max.apply(Math, restArgs);
+        }
+        assert(multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)");
+
+        function makeNinja(name){}
+        function makeSamurai(name, rank){}
+        assert(makeNinja.length == 1, "Only expecting a single argument");
+        assert(makeSamurai.length == 2, "Two arguments expected");
+
+        var ninja = {
+            whatever: function() {
+                switch (arguments.length) {
+                    case 0:
+                        /* do something */
+                        break;
+                    case 1:
+                        /* do something else */
+                        break;
+                    case 2:
+                        /* do yet something else */
+                        break;
+                    //and so on ...
+                }
+            }
+        }
+        function addMethod(object, name, fn) {
+            var old = object[name];
+            object[name] = function(){
+                if (fn.length == arguments.length)
+                    return fn.apply(this, arguments)
+                else if (typeof old == 'function')
+                    return old.apply(this, arguments);
+            };
+        }
+        var ninjas = {
+            values: ["Dean Edwards", "Sam Stephenson", "Alex Russell"]
+        };
+        addMethod(ninjas, "find", function(){
+            return this.values;
+        });
+        addMethod(ninjas, "find", function(name){
+            var ret = [];
+            for (var i = 0; i < this.values.length; i++)
+                if (this.values[i].indexOf(name) == 0)
+                    ret.push(this.values[i]);
+            return ret;
+        });
+        addMethod(ninjas, "find", function(first, last){
+            var ret = [];
+            for (var i = 0; i < this.values.length; i++)
+                if (this.values[i] == (first + " " + last))
+                    ret.push(this.values[i]);
+            return ret;
+        });
+        assert(ninjas.find().length == 3, "Found all ninjas");
+        assert(ninjas.find("Sam").length == 1, "Found ninja by first name");
+        assert(ninjas.find("Dean", "Edwards").length == 1, "Found ninja by first and last name");
+        assert(ninjas.find("Alex", "Russell", "Jr") == null, "Found nothing");
+
+        //GENERAL FUNCTION TO CHECK IS IT A FUNCTION
+        function isFunction(fn) {
+            return Object.prototype.toString.call(fn) === "[object Function]";
+        }
+     </script>
+
+</html>

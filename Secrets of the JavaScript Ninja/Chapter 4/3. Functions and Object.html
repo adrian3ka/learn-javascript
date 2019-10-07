@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <title>Functions and Object</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         var obj = {};
+         var fn = function(){};
+         assert(obj && fn, "Both the object and function exist.");
+         //we can attach properties to a function
+         obj.prop = "hitsuke (distraction)";
+         fn.prop = "tanuki (climbing)";
+
+         //storing functions
+         var store = {
+             nextId: 1,
+
+             cache: {},
+             add: function(fn) {
+                 if (!fn.id) {
+                     fn.id = this.nextId++;
+                     return !!(this.cache[fn.id] = fn);
+                 }
+             }
+        };
+        function ninja(){}
+        assert(store.add(ninja), "Function was safely added.");
+        assert(ninja.id === 1, "Function ninja.id is 1.");
+        assert(!store.add(ninja), "But it was only added once.");
+
+        //memoizing
+        function isPrime(value) {
+            if (!isPrime.anwers) isPrime.answers = {};
+            if (isPrime.answers[value] != null) {
+                return isPrime.answers[value];
+            }
+            var prime = value != 1; // 1 can never be prime
+            for (var i = 2; i < value; i++) {
+                if (value % i == 0) {
+                    prime = false;
+                    break;
+                }
+           }
+           return isPrime.answers[value] = prime;
+        }
+        assert(isPrime(5), "5 is prime!" );
+        assert(isPrime.answers[5], "The answer was cached!" );
+
+        var isPrimeEnhanced = {
+            answers: {},
+            calculate: function (value) {
+                if (this.answers[value] != null) {
+                    console.log("Getting From Current Cache...");
+                    return this.answers[value];
+                }
+                console.log("Calculating...");
+                var prime = value != 1; // 1 can never be prime
+                for (var i = 2; i < value; i++) {
+                    if (value % i == 0) {
+                        prime = false;
+                        break;
+                    }
+                }
+                return this.answers[value] = prime;
+            }
+        };
+        assert(true, "|==============Enchanced Version" ); // Calculating...
+        assert(isPrimeEnhanced.calculate(5), "5 is prime!" ); // Calculating...
+        assert(isPrimeEnhanced.answers[5], "The answer was cached!" );
+        assert(isPrimeEnhanced.calculate(5), "Getting From Current Cache, 5 is Prime" ); // Getting From Current Cache...
+     </script>
+
+</html>

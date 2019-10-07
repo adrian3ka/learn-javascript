@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Sorting With Comparator</title>
+        <script>
+            var values = [ 213, 16, 2058, 54, 10, 1965, 57, 9 ];
+            console.log(values);
+            values.sort();
+            console.log(values);
+            values.sort(function(value1,value2){ return value2 - value1; });
+            console.log(values);
+            values.sort(function(value1,value2){ 
+                console.log("value1 >> ", value1, "value2 >> ", value2);
+                return value1 - value2;
+            });
+            console.log(values);
+        </script>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+</html>

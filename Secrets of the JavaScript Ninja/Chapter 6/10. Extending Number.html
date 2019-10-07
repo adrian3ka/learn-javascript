@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Extending</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <div id="parent">
+         </div>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        Number.prototype.add = function(num){
+            return this + num;
+        };
+        var n = 5;
+
+        assert(n.add(3) == 8, "It works when the number is in a variable.");
+        assert((5).add(3) == 8, "Also works if a number is wrapped in parentheses.");
+        assert((5).add(3) == 8, "What about a simple literal?");
+
+    </script>
+</html>

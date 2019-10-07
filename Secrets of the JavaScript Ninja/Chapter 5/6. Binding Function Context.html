@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <button id="test">Click Me!</button>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         var button = {
+             clicked: false,
+             click: function() {
+                 console.log(this, button);
+                 this.clicked = true;
+                 assert(button.clicked,"The button has been clicked");
+             }
+         };
+
+         var elem = document.getElementById("test");
+         elem.addEventListener("click",button.click,false);
+     </script>
+
+</html>

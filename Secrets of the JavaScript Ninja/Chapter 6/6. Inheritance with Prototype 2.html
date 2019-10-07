@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function Person(){}
+        Person.prototype.dance = function(){};
+
+        function Ninja(){}
+        Ninja.prototype = new Person();
+        var ninja = new Ninja();
+        assert(ninja instanceof Ninja, "ninja receives functionality from the Ninja prototype" );
+        assert( ninja instanceof Person, "... and the Person prototype" );
+        assert( ninja instanceof Object, "... and the Object prototype" );
+        assert(typeof ninja.dance == "function", "... and can dance!");
+
+        if (!Array.prototype.customForEach) {
+            assert(true, "Successfully adding prototype for customForEach");
+            Array.prototype.customForEach = function(callback, context) {
+                console.log(callback);
+                console.log(context);
+                for (var i = 0; i < this.length; i++) {
+                    callback.call(context || null, this[i], i, this);
+                }
+            };
+        }
+
+        ["a", "b", "c"].customForEach(function(value, index, array) {
+            assert(value, value + " Is in position " + index + " out of " + (array.length - 1));
+        });
+    </script>
+</html>

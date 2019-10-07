@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Functions and Object</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         var biggest = Math.max(1,2,3,4);
+         assert(biggest == 4, "Successfully Get Biggest With Cool Methods");
+         var list = [1,2,3,4];
+         var biggest = Math.max(list[0],list[1],list[2],list[3]); // Sucks
+         assert(biggest == 4, "Successfully Get Biggest With Sucks Methods");
+         function smallest(array){
+             console.log(array);
+             return Math.min.apply(Math, array); // Math.min(0,1,2,3);
+         }
+         function largest(array){
+             console.log(array);
+             return Math.max.apply(Math, array);
+         }
+         assert(smallest([0, 1, 2, 3]) == 0, "Located the smallest value."); 
+         assert(largest([0, 1, 2, 3]) == 3, "Located the largest value.");
+     </script>
+
+</html>

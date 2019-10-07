@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <ul id="results2"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        //Defines generic wrapping function, taking as parameters an object whose method is to be wrapped,
+        //name of object method to be wrapped, and function to be executed in place of original method.
+        function wrap(object, method, wrapper) {
+            console.log(object);
+            console.log(method);
+            console.log(wrapper);
+            //Remembers original function so that we can later
+            //reference it via a closure should we desire.
+            var fn = object[method];
+
+            //“Wraps” original function by creating new function that calls function passed as wrapper. Within
+            //new function, wrapper function is called with apply(), forcing function context to object and
+            //passing as arguments the original method 
+            //(using bind() to force its function context to object) and original arguments.
+            return object[method] = function() {
+                return wrapper.apply(this, [fn.bind(this)].concat(
+                    Array.prototype.slice.call(arguments)));
+            };
+        }
+        
+        wrap(document, "getElementById",
+            function(original, elem) {
+                console.log("Original Function >> ", original);
+                console.log("Element >> ", elem);
+                return elem == "results2" ?
+                    "results2" :
+                    original(elem);
+        });
+
+        assert(document.getElementById("results") === document.getElementById("results") , "Get element 'results'");
+        assert(document.getElementById("results2") === "results2", "Get String 'results2' instead of element");
+        
+    </script>
+
+</html>

@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        function juggle() {
+            var result = 0 ;
+            for (var n = 0 ; n < arguments.length; n++) {
+                result += arguments[n];
+            }
+            this.result = result;
+        }
+        function test() {
+            return this.test = 10;
+        }
+        var ninja1 = {};
+        var ninja2 = {};
+        juggle.apply(ninja1, [1,2,3,4]);
+        juggle.call(ninja2, 5,6,7,8);
+        // apply and call have similar manner but different on its invocation
+        // they will be attach a method to its object
+        assert(ninja1.result === 10, "juggled via apply");
+        assert(ninja2.result === 26, "juggled via call");
+        test.apply(ninja1);
+        test.call(ninja2);
+        assert(ninja1.test === 10, "test via apply");
+        assert(ninja2.test === 10, "test via call");
+    </script>
+</html>

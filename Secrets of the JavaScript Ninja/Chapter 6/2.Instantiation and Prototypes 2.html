@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function Ninja(){
+            this.swung = false;
+            this.swingSword = function(){
+                return !this.swung;
+            };
+        }
+        Ninja.prototype.swingSword = function(){
+            return this.swung;
+        };
+        var ninja = new Ninja();
+        
+        //Doesn't Change The initial method
+        assert(ninja.swingSword(), "Called the instance method, not the prototype method.");
+
+        //Why ?
+        /*
+        1. When a property reference to an object is made, the object itself is checked to
+        see if the property exists. If it does, the value is taken. If not ...
+        2.The prototype associated with the object is located, and it is checked for the
+        property. If it exists, the value is taken. If not ...
+        3.The value is undefined .*/
+    </script>
+</html>

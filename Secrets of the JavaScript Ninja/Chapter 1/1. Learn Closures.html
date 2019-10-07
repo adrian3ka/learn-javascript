@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Learn Closures</title>
+        <script>
+            var add = (function () {
+                var counter = 0;
+                return function () {counter += 1; return counter}
+            })();
+
+            add();
+            add();
+            alert(add()); // the counter is now 3
+        </script>
+        <style>
+        </style>
+     </head>
+     <body>
+     </body>
+</html>

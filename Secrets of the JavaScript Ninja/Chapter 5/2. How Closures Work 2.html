@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+         var outerValue = 'ninja';
+         var later;
+
+         function outerFunction() {
+             var innerValue = 'samurai';
+             function innerFunction() {
+                 assert(outerValue == "ninja","I can see the ninja.");
+                 assert(innerValue == "samurai","I can see the samurai.");
+             }
+
+             later = innerFunction;
+         }
+
+         outerFunction();
+         later();
+     </script>
+
+</html>

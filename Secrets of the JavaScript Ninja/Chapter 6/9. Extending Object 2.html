@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Extending</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <div id="parent">
+         </div>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        Object.prototype.keys = function() {
+            var keys = [];
+            for (var p in this) 
+                if (this.hasOwnProperty(p)) keys.push(p);
+            return keys;
+        };
+
+        var obj = { a: 1, b: 2, c: 3 };
+
+        assert(obj.keys().length == 3, "There are three properties in this object.");
+    </script>
+</html>

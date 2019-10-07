@@ -1,0 +1,51 @@
+<html>
+    <head>
+       <title>Test Suite</title>
+       <style>
+           #results li.pass { color: green; }
+           #results li.fail { color: red; }
+       </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        function isNimble(){ return true; }
+        console.log(typeof window.isNimble);
+        assert(typeof window.isNimble === "function",
+            "isNimble() defined");
+        assert(isNimble.name === "isNimble",
+            "isNimble() has a name");
+        var canFly = function(){ return true; };
+        assert(typeof window.canFly === "function",
+            "canFly() defined");
+        assert(canFly.name === "canFly",
+            "canFly() has a name (on a new browser version)");
+        // Variables and methods can infer the name of an anonymous function from its syntactic position (new in ECMAScript 2015).
+        var areYouSure = function yesIAm(){};
+        
+        assert(areYouSure.name === "yesIAm",
+            "the name of variable areYouSure is yesIAm"); 
+        window.isDeadly = function(){ return true; };
+        assert(typeof window.isDeadly === "function", "isDeadly() defined");
+        assert(window.isDeadly.name === "", "isDeadly() doesn't have a name"); 
+
+        function outer(){
+            assert(typeof inner === "function", "inner() in scope before declaration");
+            function inner(){}
+            assert(typeof inner === "function", "inner() in scope after declaration");
+            assert(window.inner === undefined, "inner() not in global scope");
+        }
+
+        outer();
+        assert(window.inner === undefined, "inner() still not in global scope");
+        window.wieldsSword = function swingsSword() { return true; };
+        assert(window.wieldsSword.name === 'swingsSword', "wieldSword's real name is swingsSword");
+    </script>
+</html>

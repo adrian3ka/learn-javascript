@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <button id="test">Click Me!</button>
+     </body>
+    <script>
+        function bind(context,name){
+            return function(){
+                console.log(context);
+                console.log(name);
+                console.log(context[name]);
+                console.log("arguments >> ", arguments);
+                return context[name].apply(context,arguments);
+            };
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var button = {
+            clicked: false,
+            click: function() {
+                console.log("============Button================")
+                console.log(this, button);
+                console.log("==================================")
+                this.clicked = true;
+                assert(button.clicked,"The button has been clicked");
+            }
+        };
+
+        var elem = document.getElementById("test");
+        elem.addEventListener("click",bind(button,"click"),false);
+
+        assert(true, "|===========Function Binding");
+
+
+        //Adds the bind() method to all functions via its prototype.
+        //That’s something we’ll see in the next chapter.
+        Function.prototype.bind = function(){
+            var fn = this, args = Array.prototype.slice.call(arguments),
+                object = args.shift();
+            console.log(this);
+            console.log(this.name);
+            console.log(arguments);
+            console.log(args);
+            console.log(object);
+            return function(){
+                return fn.apply(object,
+                    args.concat(Array.prototype.slice.call(arguments)));
+            };
+        };
+        var myObject = {
+            name: "Adrian"
+        };
+        function myFunction(){
+            return this == myObject;
+        }
+        assert( !myFunction(), "Context is not set yet" );
+        var aFunction = myFunction.bind(myObject);
+        assert( aFunction(), "Context is set properly" );
+    </script>
+
+</html>

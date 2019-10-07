@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Functions and Object</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <input id="first"/>
+         <input id="second"/>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         var elems = {
+             length: 0,
+             add: function(elem){
+                 console.log(this, elem);
+                 Array.prototype.push.call(this, elem);
+             },
+             gather: function(id){
+                 this.add(document.getElementById(id));
+             }
+        };
+        //Why Array Length can be Changed?
+        //we’re tricking the method to use our object as its context by
+        //using the call() method and forcing our object to be the context of the push() method.
+        //The push() method, which increments the length property (thinking that it’s the length
+        //property of an array), adds a numbered property to the object referencing the passed
+        //element.
+        elems.gather("first");
+        assert(elems.length == 1 && elems[0].nodeType, "Verify that we have an element in our stash");
+        elems.gather("second");
+        assert(elems.length == 2 && elems[1].nodeType, "Verify the other insertion");
+     </script>
+
+</html>

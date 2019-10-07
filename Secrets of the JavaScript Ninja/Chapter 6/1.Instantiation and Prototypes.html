@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var o = {};
+        o.name = 'Saito';
+        o.occupation = 'marksman';
+        o.cyberizationLevel = 20;
+        console.log(o);
+
+        function Ninja(){
+            this.swung = false;
+            this.swingSword = function(){
+                return !this.swung;
+            };
+        }
+        Ninja.prototype.swingSword = function(){
+            return this.swung;
+        };
+        var ninja = new Ninja();
+        assert(ninja.swingSword(), "Called the instance method, not the prototype method.");
+    </script>
+
+</html>

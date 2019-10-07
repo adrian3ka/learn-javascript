@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+         //Establishes an anonymous function as event handler. 
+         //There’s no need to create a named function only to reference it in this location.
+         window.onload = function () {
+             assert(true, 'Power!');
+         };
+
+
+         //Creates a function to be used as a method for ninja.
+         //We’ll be using the property named shout to invoke the
+         //function, so it doesn’t need its own name.
+         var ninja = {
+             shout: function(){
+                 assert(true,"Ninja");
+             }
+         };
+
+         ninja.shout();
+
+         //Passes a function to the setTimeout() function as a callback to be invoked when
+         //the timer expires. Again, why bother to give it an unneeded name?
+         setTimeout(
+             function(){ assert(true,'Forever!'); },
+             500);
+     </script>
+
+</html>

@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <ul id="results2"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        (function(){
+            assert(true, "Function Runs Immediately");
+        })();
+        
+
+        //The important thing to note is that a closure is created for the handler that includes numClicks ,
+        //allowing the numClicks variable to persist along with the handler,
+        //and be referenceable by the handler but nowhere else.
+        /*(function(){
+            var numClicks = 0;
+            document.addEventListener("click", function(){
+                alert( ++numClicks );
+            }, false);
+        })();*/
+        //====EQUALLY BELOW====
+        document.addEventListener("click", (function(){
+            var numClicks = 0;
+            return function(){
+                alert( ++numClicks );
+            };
+        })(), false);
+
+        //This is a technique employed by many jQuery plugin authors whose code will be
+        //included in pages that they didn’t write. It’s unsafe to assume that $ refers to jQuery , so
+        //they can include the plugin code inside an immediate function that lets them safely
+        //use $ to refer to jQuery.
+
+        /* Example For Immediate Function Jquery
+        $ = function(){ alert('not jQuery!'); };
+        (function($){
+            $('img').on('click',function(event){
+                $(event.target).addClass('clickedOn');
+            })
+        })(jQuery);
+        */
+    </script>
+
+</html>

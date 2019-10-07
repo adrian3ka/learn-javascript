@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        Function.prototype.curry = function() {
+            var fn = this,
+                args = Array.prototype.slice.call(arguments);
+            return function() {
+                return fn.apply(this, args.concat(
+                Array.prototype.slice.call(arguments)));
+            };
+        };
+
+        Function.prototype.partial = function() {
+            console.log("=========Partial Function Called==========");
+            var fn = this, args = Array.prototype.slice.call(arguments);
+            console.log(this);
+            console.log(this.name);
+            console.log(args);
+            console.log(arguments);
+            return function() {
+                var arg = 0;
+                console.log(arg);
+                for (var i = 0; i < args.length && arg < arguments.length; i++) {
+                    if (args[i] === undefined) {
+                        console.log("arg >> ", arg);
+                        console.log("Assign >> ", arguments[arg]);
+                        args[i] = arguments[arg++];
+                    }
+                }
+                console.log(args);
+                console.log("===============Partial Ended==============");
+                return fn.apply(this, args);
+            };
+        };
+
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var elements = "val1,val2,val3".split(/,\s*/);
+        console.log(elements);
+
+        String.prototype.csv = String.prototype.split.partial(/,\s*/);
+        var results = ("Mugan, Jin, Fuu").csv();
+        assert(results[0]=="Mugan" && results[1]=="Jin" && results[2]=="Fuu",
+               "The text values were split properly");
+
+
+        String.prototype.curryCsv = String.prototype.split.curry(/,\s*/);
+        var results = ("Mugan, Jin, Fuu").curryCsv();
+        assert(results[0]=="Mugan" && results[1]=="Jin" && results[2]=="Fuu",
+               "The text values were split properly using curry");
+
+        var delay = setTimeout.partial(undefined, 1000);
+        delay(function(){
+            assert(true, "A call to this function will be delayed 1000 ms.");
+        });
+
+        var bindClick = document.body.addEventListener.partial("click", undefined, false);
+        bindClick(function(){
+            assert(true, "Click event bound via curried function.");
+        });
+
+    </script>
+
+</html>

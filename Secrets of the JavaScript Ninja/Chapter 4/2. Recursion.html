@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         //we make a recursive call, using the function’s name, 
+         //in the last line of the function.
+         function isPalindrome(text) {
+             if (text.length <= 1) return true;
+             if (text.charAt(0) != text.charAt(text.length - 1)) return false;
+             return isPalindrome(text.substr(1,text.length - 2));
+         }
+
+         assert(isPalindrome("katak"), "katak is Palindrome");
+         assert(isPalindrome("kotak"), "kotak is Palindrome");
+
+         //Declares a recursive chirping function that calls itself by name 
+         //until it determines that it’s done.
+         function chirp(n) {
+             return n > 1 ? chirp(n - 1) + "-chirp" : "chirp";
+         }
+         assert(chirp(3) == "chirp-chirp-chirp", "Calling the named function comes naturally.");
+
+
+         //Declares a recursive chirp function as a property of the ninja object. 
+         //We now need to call the method from within itself using the
+         //reference to the object’s method.
+         //That’s all fine as it stands, but because we’re relying upon an indirect 
+         //reference to the function—namely, the chirp property of ninja 
+         //—we could be standing on thin ice. And that’s not a wise move for a ninja of any standing.
+         var ninja = {
+             chirp: function(n) {
+                 return n > 1 ? ninja.chirp(n - 1) + "-chirp" : "chirp";
+             }
+         };
+         //Note : POOR EXAMPLE
+         assert(ninja.chirp(3) == "chirp-chirp-chirp", "An object property isn't too confusing, either.");
+
+         var samurai = { chirp: ninja.chirp };
+
+         ninja = {};
+         //Redefines ninja such that it has no properties.
+         //This means that its chirp property goes away!
+         try {
+             assert(samurai.chirp(3) == "chirp-chirp-chirp", "Is this going to work?");
+         } catch(e){
+             assert(false, "Uh, this isn't good! Where'd ninja.chirp go?");
+         }
+
+         //Below is Better Example
+         var ninja = {
+             chirp: function(n) {
+                 return n > 1 ? this.chirp(n - 1) + "-chirp" : "chirp";
+             }
+         };
+         //Note : POOR EXAMPLE
+         assert(ninja.chirp(3) == "chirp-chirp-chirp", "An object property isn't too confusing, either.");
+
+         var samurai = { chirp: ninja.chirp };
+
+         ninja = {};
+         //Redefines ninja such that it has no properties.
+         //This means that its chirp property goes away!
+         try {
+             assert(samurai.chirp(3) == "chirp-chirp-chirp", "Is this going to work?");
+         } catch(e){
+             assert(false, "Uh, this isn't good! Where'd ninja.chirp go?");
+         }
+
+         assert(true, "|========Inline Named Solution========");
+         var ninja = {
+             chirp: function signal(n) {
+                 return n > 1 ? signal(n - 1) + "-chirp" : "chirp";
+             }
+         };
+         assert(ninja.chirp(3) == "chirp-chirp-chirp", "Works as we would expect it to!");
+         var samurai = { chirp: ninja.chirp };
+         ninja = {};
+         assert(samurai.chirp(3) == "chirp-chirp-chirp", "The method correctly calls itself.");
+
+         var ninja = function myNinja() {
+             assert(ninja == myNinja, "This function is named two things at once!");
+         }
+         ninja();
+         assert(typeof myNinja == "undefined", "But myNinja isn't defined outside of the function.");
+
+         var ninja = {
+             chirp: function(n) {
+                 return n > 1 ? arguments.callee(n - 1) + "-chirp" : "chirp";
+             }
+         };
+         assert(ninja.chirp(3) == "chirp-chirp-chirp", "arguments.callee is the function itself.");
+     </script>
+
+</html>

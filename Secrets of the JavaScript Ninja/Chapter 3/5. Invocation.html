@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        // Invocation as a method
+        var o = {};
+        o.whatever = function(){
+            console.log(this);
+            console.log(o);
+            if (this === o) {
+                console.log("this is o");
+            }
+            console.log(window);
+            console.log("Whatever called");
+        };
+        o.whatever();
+        // this will belongs to the object who called it, not the main object;
+        function creep() { return this; };
+        assert(creep() === window, "Creeping in the window");
+        var sneak = creep;
+        assert(sneak() === window, "Sneaking in the window");
+        var ninja1 = {
+            skulk: creep
+        };
+
+        assert(ninja1.skulk() === ninja1, "The 1st ninja is skulking");
+        var ninja2 = {
+            skulk: creep
+        };
+
+        assert(ninja2.skulk() === ninja2, "The 2nd ninja is skulking");
+        //Note that even though the same function is used throughout all these examples,
+        //the function context for each invocation of the function changes depending upon
+        //how the function is invoked, rather than on how it was declared.
+    </script>
+</html>

@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <script>
+            function assert(value, desc) {
+                var li = document.createElement("li");
+                li.className = value ? "pass" : "fail";
+                li.appendChild(document.createTextNode(desc));
+                document.getElementById("results").appendChild(li);
+            }
+            function useless(callback) { return callback(); }
+            window.onload = function() {
+                var text = 'Domo arigato!';
+                assert(useless(function(){ return text; }) === text, 
+                       "The useless function works! " + text);
+            };
+        </script>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <div id="box" style="position: absolute;"> ボックス </div>
+     </body>
+     <script>
+         function assert(value, desc) {
+             var li = document.createElement("li");
+             li.className = value ? "pass" : "fail";
+             li.appendChild(document.createTextNode(desc));
+             document.getElementById("results").appendChild(li);
+         }
+
+         function animateIt(elementId) {
+             var elem = document.getElementById(elementId);
+             var tick = 0;
+             console.log(elem);
+             var timer = setInterval(function(){
+                 console.log(tick);
+                 if (tick < 100) {
+                     elem.style.left = elem.style.top = tick + "px";
+                     tick++;
+                 } else {
+                     clearInterval(timer);
+                     assert(tick == 100, "Tick accessed via a closure.");
+                     assert(elem, "Element also accessed via a closure.");
+                     assert(timer, "Timer reference also obtained via a closure." );
+                 }
+             }, 10);
+         }
+
+         animateIt('box');
+     </script>
+
+</html>

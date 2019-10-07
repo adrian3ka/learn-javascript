@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>Scoping and</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+     <script>
+        // Hoisting is JavaScript's default behavior of moving all declarations 
+        // to the top of the current scope (to the top of the current script or the current function).
+
+
+        var outer, inner, a, b, c;
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        if (window) {
+            var x = 213;
+        }
+        function testCode(outer, inner, a, b, c) {
+            assert(typeof outer==='function', "outer() is in scope");
+            assert(typeof inner==='function', "inner() is in scope");
+            assert(typeof a==='number', "a is in scope");
+            assert(typeof b==='number', "b is in scope");
+            assert(typeof c==='number', "c is in scope");
+        }
+        assert(x === 213, "x value doesn't terminated");
+        assert(true,"|----- BEFORE OUTER -----|");
+        testCode(outer, inner, a, b, c);
+        /* test code here */
+        function outer(){
+            assert(true,"|----- INSIDE OUTER, BEFORE a -----|");
+            /* test code here */
+            testCode(outer, inner, a, b, c);
+            var a = 1;
+            assert(true,"|----- INSIDE OUTER, AFTER a -----|");
+            /* test code here */
+            testCode(outer, inner, a, b, c);
+            function inner(){ /* does nothing */ }
+            var b = 2;
+            assert(true,"|----- INSIDE OUTER, AFTER inner() AND b -----|");
+            /* test code here */
+            testCode(outer, inner, a, b, c);
+            if (a == 1) {
+                var c = 3;
+                assert(true,"|----- INSIDE OUTER, INSIDE if -----|");
+                /* test code here */
+            testCode(outer, inner, a, b, c);
+            }
+            assert(true,"|----- INSIDE OUTER, OUTSIDE if -----|");
+            /* test code here */
+            testCode(outer, inner, a, b, c);
+        }
+        outer();
+        assert(true,"|----- AFTER OUTER -----|");
+        /* test code here */
+        testCode(outer, inner, a, b, c);
+    </script>
+</html>

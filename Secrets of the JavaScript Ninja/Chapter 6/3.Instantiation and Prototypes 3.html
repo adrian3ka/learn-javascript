@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function Ninja(){
+            this.swung = true;
+        }
+        var ninja = new Ninja();
+        
+        Ninja.prototype.swingSword = function(){
+            return this.swung;
+        };
+        //Property references are first looked for in the object itself; 
+        //if they’re not found, the constructor’s prototype is inspected.
+        assert(ninja.swingSword(), "Method exists, even out of order.");
+
+        //The prototype is only consulted when a property reference on the object itself fail
+    </script>
+</html>

@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+         <div>DIV 0</div>
+         <div>DIV 1</div>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var div = document.getElementsByTagName("div");
+        for (var i = 0; i < div.length; i++) (function(n){
+            div[n].addEventListener("click", function(){
+                alert("div #" + n + " was clicked.");
+            }, false);
+        })(i);
+
+        //Library Wrapping
+        /*
+        var jQuery = (function(){
+            function jQuery(){
+                // Initialize
+            }
+            // ...
+            return jQuery;
+        })();*/
+    </script>
+
+</html>
