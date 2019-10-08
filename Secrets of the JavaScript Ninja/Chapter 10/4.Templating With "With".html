@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+        <script type="text/tmpl" id="colors">
+            <p>Here's a list of <%= items.length %> items:</p>
+            <ul>
+            <% for (var i = 0; i < items.length; i++) { %>
+                <li style='color:<%= colors[i % colors.length] %>'>
+                <%= items[i] %></li>
+            <% } %>
+            </ul>
+            and here's another...
+        </script>
+        <script type="text/tmpl" id="colors2">
+            <p>Here's a list of <%= items.length %> items:</p>
+            <ul>
+            <% for (var i = 0; i < items.length; i++) {
+                print("<li style='color:", colors[i % colors.length], "'>",
+                    items[i], "</li>");
+            } %>
+            </ul>
+        </script>
+        <script type="text/javascript">
+            var colorsArray = ['red', 'green', 'blue', 'orange'];
+            var items = [];
+            for (var i = 0; i < 20; i++) {
+                items.push( "test" );
+            }
+            function replaceContent(name) {
+                document.getElementById('content').innerHTML =
+                    tmpl(name, {colors: colorsArray, items: items});
+            }
+        </script>
+    </head>
+    <body>
+        <ul id="results"></ul>
+        <input type="button" value="Run Colors" onclick="replaceContent('colors')">
+        <input type="button" value="Run Colors2" onclick="replaceContent('colors2')">
+        <p id="content">Replaced Content will go here</p>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        (function(){
+            var cache = {};
+            this.tmpl = function tmpl(str, data){
+            var fn = !/\W/.test(str) ?
+                cache[str] = cache[str] ||
+                tmpl(document.getElementById(str).innerHTML) :
+                
+                new Function("obj", "var p=[],print=function(){p.push.apply(p,arguments);};" +
+                    "with(obj){p.push('" +
+                    str.replace(/[\r\t\n]/g, " ")
+                       .split("<%").join("\t")
+                       .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+                       .replace(/\t=(.*?)%>/g, "',$1,'")
+                       .split("\t").join("');")
+                       .split("%>").join("p.push('")
+                       .split("\r").join("\\'")
+                    + "');}return p.join('');");
+                return data ? fn( data ) : fn;
+            };
+        })();
+
+        assert( tmpl("Hello, <%= name %>!", {name: "world"}) ==
+                "Hello, world!", "Do simple variable inclusion." );
+        var hello = tmpl("Hello, <%= name %>!");
+        assert( hello({name: "world"}) == "Hello, world!", "Use a pre-compiled template." );
+    </script>
+
+</html>

@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        setTimeout(function repeatMe() {
+            assert(true, "Set Timeout");
+            setTimeout(repeatMe, 1000);
+        }, 1000);
+
+        setInterval(function() {
+            assert(true, "Set Interval");
+        }, 1000);
+    </script>
+
+</html>

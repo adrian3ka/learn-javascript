@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var use = "other";
+        var katana = {
+            isSharp: true,
+            use: function(){
+                this.isSharp = !this.isSharp;
+            }
+        };
+
+        with (katana) {
+            isSharp = false;
+            assert(katana.isSharp === false, "properties can be assigned");
+
+            cut = function(){
+                isSharp = false;
+            };
+            assert(typeof katana.cut == "function", 
+                   "new properties can be created on the scoped object");
+            assert(typeof window.cut == "function",
+                    "new properties are created in the global scope");
+        }
+        assert(katana.isSharp === false, "properties still changed");
+
+    </script>
+
+</html>

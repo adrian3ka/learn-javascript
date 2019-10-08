@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var ninja = eval("({name:'Ninja'})");
+        assert(ninja != undefined,"the ninja was created");
+        assert(ninja.name === "Ninja", "and with the expected property");
+        var fn = eval("(function(){return 'Ninja';})");
+        assert(typeof fn === 'function', "the function was created");
+        assert(fn() === "Ninja", "and returns expected value" );
+
+        var ninja2 = eval("{name:'Ninja'}");
+        assert(ninja2 != undefined,"ninja2 was created");
+        assert(ninja2.name === "Ninja", "and with the expected property"); //failed expected, need parentheses.
+
+        var add = new Function("a", "b", "return a + b;");
+        assert(add(3,4) === 7, "Function created and working!");
+
+        var tick = window.setTimeout('assert(true, "Hi!")', 1000);
+
+        function globalEval(data) {
+            data = data.replace(/^\s*|\s*$/g, "");
+            if (data) {
+                var head = document.getElementsByTagName("head")[0] || document.documentElement,
+                script = document.createElement("script");
+                script.type = "text/javascript";
+                script.text = data;
+                head.appendChild(script);
+                head.removeChild(script);
+            }
+        }
+
+        window.onload = function() {
+            (function() {
+                globalEval("var test = 5;");
+            })();
+
+            assert(test === 5, "The code was evaluated globally.");
+        };
+    </script>
+
+</html>

@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var use = "other";
+        var katana = {
+            isSharp: true,
+            use: function(){
+                this.isSharp = !this.isSharp;
+            }
+        };
+
+        with (katana) {
+            assert(use !== "other" && typeof use == "function",
+                   "use is a function from the katana object.");
+            console.log(this, katana);
+            assert(this !== katana, "context isn't changed; keeps its original value");
+            assert(isSharp, "Katana is Sharp");
+            use();
+            assert(!isSharp, "Katana is not Sharp");
+        }
+        assert(use === "other", "outside the with use is unaffected.");
+        assert(typeof isSharp === "undefined", "outside the with the properties don't exist.");
+    </script>
+
+</html>

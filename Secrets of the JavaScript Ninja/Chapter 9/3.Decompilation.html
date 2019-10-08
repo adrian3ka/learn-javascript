@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        //check browser decompilation support
+        var FUNCTION_DECOMPILATION = /abc(.|\n)*xyz/.test(function(abc){xyz;});
+        assert(FUNCTION_DECOMPILATION, "Function decompilation works in this browser");
+
+        function test(a){ return a + a; }
+        assert(test.toString() === "function test(a){ return a + a; }", "Function decompiled");
+
+        function argumentNames(fn) {
+            var found = /^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/.exec(fn.toString());
+            console.log(found);
+            return found && found[1] ? found[1].split(/,\s*/) : [];
+        }
+
+        assert(argumentNames(function(){}).length === 0, "Works on zero-arg functions.");
+        assert(argumentNames(function(x){})[0] === "x", "Single argument working.");
+        var tempFunc = function(a,b,c,d,e){};
+        var results = argumentNames(tempFunc);
+        assert(results[0] == 'a' &&
+               results[1] == 'b' &&
+               results[2] == 'c' &&
+               results[3] == 'd' &&
+               results[4] == 'e', 
+               "Multiple arguments working!");
+
+        var json = '{"name":"Ninja"}';
+        var object = eval("(" + json + ")");
+        assert(object.name === "Ninja", "My name is Ninja!");
+    </script>
+
+</html>

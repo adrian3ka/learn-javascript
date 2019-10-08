@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+       
+        (function() {
+            var queue = [], paused = false; //Retains state
+            this.test = function(fn) {
+                queue.push(fn); // Defines the test registration function
+                runTest();
+            };
+            this.pause = function() { //Defines the function to pause testing
+                paused = true;
+            }; 
+            this.resume = function() { //Defines the resume function 
+                paused = false;
+                setTimeout(runTest, 1);
+            }; 
+            function runTest() { //Runs the tests
+                if (!paused && queue.length) {
+                    queue.shift()();
+                    if (!paused) resume();
+                }
+            }
+        })();
+    </script>
+
+</html>

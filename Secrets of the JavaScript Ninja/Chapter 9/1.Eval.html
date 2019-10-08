@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        assert(eval("5 + 5") === 10, "5 and 5 is 10");
+
+        assert(eval("var ninja = 5;") === undefined, "no value was returned" );
+        assert(ninja === 5, "The variable ninja was created");
+        (function(){
+            eval("var ninja = 6;");
+            assert(ninja === 6, "evaluated within the current scope.");
+        })();
+        assert(window.ninja === 5, "the global scope was unaffected");
+        assert(ninja === 5, "the global scope was unaffected");
+    </script>
+
+</html>
