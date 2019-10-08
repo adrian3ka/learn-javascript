@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        assert(true,"|==========Triming Whitespaces==========");
+        function trim(str) {
+            return (str || "").replace(/^\s+|\s+$/g, "");
+        }
+
+        assert(trim(" #id div.class ") == "#id div.class",
+               "Extra whitespace trimmed from a selector string.");
+
+        function alternativeTrim(str) {
+            return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        }
+
+        assert(trim(" #id div.class ") == "#id div.class", 
+               "Extra whitespace trimmed from a selector string.");
+        function alternativeTrim2(str) {
+            var str = str.replace(/^\s\s*/, ''),
+                ws = /\s/, i = str.length;
+            while (ws.test(str.charAt(--i)));
+            return str.slice(0, i + 1);
+        }
+        assert(trim(" #id div.class ") == "#id div.class",
+               "Extra whitespace trimmed from a selector string.");
+        /*Trim implementation | Short string | Document
+                trim          | 8.7 ms       | 2,075.8 ms
+            alternativeTrim   | 8.5 ms       | 3,706.7 ms
+            alternativeTrim2  | 13.8 ms      | 169.4 ms*/
+
+        assert(true,"|==========Matching New Lines==========");
+        var html = "<b>Hello</b>\n<i>world!</i>";
+
+        assert(/.*/.exec(html)[0] === "<b>Hello</b>", "A normal capture doesn't handle endlines.");
+        assert(/[\S\s]*/.exec(html)[0] === "<b>Hello</b>\n<i>world!</i>",
+               "Matching everything with a character set.");
+        assert(/(?:.|\s)*/.exec(html)[0] === "<b>Hello</b>\n<i>world!</i>",
+               "Using a non-capturing group to match everything.");
+
+        assert(true,"|==========Matching Unicode==========");
+        var text ="\u5FCD\u8005\u30D1\u30EF\u30FC";
+        var matchAll = /[\w\u0080-\uFFFF_-]+/;
+        assert((text).match(matchAll), "Our regexp matches unicode!");
+        assert(true,"|=============Escaped characters=============");
+        var pattern = /^((\w+)|(\\.))+$/;
+
+        //Sets up various test subjects. All should pass but the last, 
+        //which fails to escape its non-word character (:).
+        var tests = [
+            "formUpdate",
+            "form\\.update\\.whatever",
+            "form\\:update",
+            "\\f\\o\\r\\m\\u\\p\\d\\a\\t\\e",
+            "form:update"
+        ];
+        for (var n = 0; n < tests.length; n++) {
+            assert(pattern.test(tests[n]), tests[n] + " is a valid identifier" );
+        }
+    </script>
+</html>

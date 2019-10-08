@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+        <div class="samurai ninja"></div>
+        <div class="ninja samurai"></div>
+        <div></div>
+        <span class="samurai ninja ronin"></span>
+        <div id="opacity"
+             style="opacity:0.5;filter:alpha(opacity=50);">
+        </div>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function findClassInElements(className, type) {
+            var elems = document.getElementsByTagName(type || "*");
+            var regex = new RegExp("(^|\\s)" + className + "(\\s|$)");
+            var results = [];
+            for (var i = 0, length = elems.length; i < length; i++)
+                if (regex.test(elems[i].className)) {
+                    results.push(elems[i]);
+                }
+            return results;
+        }
+        assert(findClassInElements("ninja", "div").length == 2,
+               "The right amount of div ninjas was found.");
+        assert(findClassInElements("ninja", "span").length == 1,
+               "The right amount of span ninjas was found.");
+        assert(findClassInElements("ninja").length == 3,
+               "The right amount of ninjas was found.");
+
+        function getOpacity(elem) {
+            var filter = elem.style.filter;
+            return filter ?
+                filter.indexOf("opacity=") >= 0 ?
+                    (parseFloat(filter.match(/opacity=([^)]+/)[1]) / 100) + "" :
+                    "" :
+                    elem.style.opacity;
+        }
+
+        window.onload = function() {
+            assert( getOpacity(document.getElementById("opacity")) == "0.5",
+                    "The opacity of the element has been obtained.");
+        };
+    </script>
+
+</html>

@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+     </head>
+     <body>
+         <ul id="results"></ul>
+     </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        function isThisAZipCode(candidate) {
+            if (typeof candidate !== "string" ||
+                candidate.length != 10) return false;
+            for (var n = 0; n < candidate.length; n++) {
+                var c = candidate[n];
+                switch (n) {
+                    case 0: case 1: case 2: case 3: case 4:
+                    case 6: case 7: case 8: case 9:
+                        if (c < '0' || c > '9') return false;
+                        break;
+                    case 5:
+                        if (c != '-') return false;
+                    break;
+                }
+            }
+            return true;
+        }
+
+        function isThisAZipCodeWithRegex(candidate) {
+            return /^\d{5}-\d{4}$/.test(candidate);
+        }
+
+        assert(isThisAZipCode("99999-9999"), "99999-9999 is a zip code");
+        assert(isThisAZipCodeWithRegex("99999-9999"), "99999-9999 is a zip code");
+
+        var pattern = /test/ig; // var pattern = new RegExp("test","ig");
+
+        var re1 = /test/i;
+        var re2 = new RegExp("test", "i");
+        assert(re1.toString() == "/test/i", "Verify the contents of the expression.");
+        assert(re1.test("TesT"), "Yes, it's case-insensitive.");
+        assert(re2.test("TesT"), "This one is too.");
+        assert(re1.toString() == re2.toString(), "The regular expressions are equal.");
+        assert(re1 != re2, "But they are different objects.");
+    </script>
+
+</html>

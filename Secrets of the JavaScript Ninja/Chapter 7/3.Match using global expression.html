@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Function Wrapping</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+        <div class="samurai ninja"></div>
+        <div class="ninja samurai"></div>
+        <div></div>
+        <span class="samurai ninja ronin"></span>
+        <div id="opacity"
+             style="opacity:0.5;filter:alpha(opacity=50);">
+        </div>
+    </body>
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var html = "<div class='test'><b>Hello</b> <i>world!</i></div>";
+        var results = html.match(/<(\/?)(\w+)([^>]*?)>/);
+        console.log(results); // < ("") ("div") ("class='test'") >
+        assert(results[0] == "<div class='test'>", "The entire match.");
+        assert(results[1] == "", "The (missing) slash.");
+        assert(results[2] == "div", "The tag name.");
+        assert(results[3] == " class='test'", "The attributes.");
+
+        var all = html.match(/<(\/?)(\w+)([^>]*?)>/g);
+        console.log(all);
+        assert(all[0] == "<div class='test'>", "Opening div tag.");
+        assert(all[1] == "<b>", "Opening b tag.");
+        assert(all[2] == "</b>", "Closing b tag.");
+        assert(all[3] == "<i>", "Opening i tag.");
+        assert(all[4] == "</i>", "Closing i tag.");
+        assert(all[5] == "</div>", "Closing div tag.");
+
+        var tag = /<(\/?)(\w+)([^>]*?)>/g, match;
+        var num = 0;
+        while ((match = tag.exec(html)) !== null) {
+            assert(match.length == 4, "Every match finds each tag and 3 captures.");
+            num++;
+        }
+        assert(num == 6, "3 opening and 3 closing tags found.");
+    </script>
+
+</html>
