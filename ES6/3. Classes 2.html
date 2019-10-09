@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+
+        assert(true, "========== Species ===========");
+        // unnamed
+        class MyArray extends Array {
+            // Overwrite species to the parent Array constructor
+            static get [Symbol.species]() { return Array; }
+        }
+
+        let a = new MyArray(1,2,3);
+        let mapped = a.map(x => x * x);
+
+        assert(mapped instanceof MyArray, "mapped instanceof MyArray"); // false
+        assert(mapped instanceof Array, "mapped instanceof Array");   // true
+        assert(true, "========== Super class ===========");
+
+        class Cat { 
+            constructor(name) {
+                this.name = name;
+            }
+  
+            speak() {
+                return `${this.name} makes a noise. `;
+            }
+        }
+
+        class Lion extends Cat {
+            speak() {
+                var catNoise = super.speak();
+                return catNoise + `${this.name} roars.`;
+            }
+        }
+
+        let l = new Lion('Fuzzy');
+        assert(l.speak(), l.speak());; 
+    </script>
+</html>

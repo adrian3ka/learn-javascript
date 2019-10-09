@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        var elements = [
+            'Hydrogen',
+            'Helium',
+            'Lithium',
+            'Beryllium'
+        ];
+
+        // This statement returns the array: [8, 6, 7, 9]
+        console.log(elements.map(function(element) {
+            return element.length;
+        }));
+
+        // The regular function above can be written as the arrow function below
+        console.log(elements.map((element) => {
+            return element.length;
+        })); // [8, 6, 7, 9]
+
+        // When there is only one parameter, we can remove the surrounding parentheses
+        console.log(elements.map(element => {
+            return element.length;
+        })); // [8, 6, 7, 9]
+
+        // When the only statement in an arrow function is `return`, we can remove `return` and remove
+        // the surrounding curly brackets
+        console.log(elements.map(element => element.length)); // [8, 6, 7, 9]
+
+
+        // Destructuring lets you use patterns to extract parts of that data
+        let obj = { first: 'Jane', last: 'Doe' };
+        let { first: f, last: l } = obj;
+        console.log(f, l)
+
+        // In this case, because we only need the length property, we can use destructuring parameter:
+        // Notice that the `length` corresponds to the property we want to get whereas the
+        // obviously non-special `lengthFooBArX` is just the name of a variable which can be changed
+        // to any valid variable name you want
+        console.log(elements.map(({ length :lengthFooBArX }) => lengthFooBArX)); // [8, 6, 7, 9]
+
+        // This destructuring parameter assignment can also be written as seen below.
+        // However, note that in
+        // this example we are not assigning `length` value to the made up property.
+        // Instead, the literal name
+        // itself of the variable `length` is used as the property 
+        // we want to retrieve from the object.
+        console.log(elements.map(({ length }) => length/2 )); // [4, 3, 3.5, 4.5]
+
+        // Access On Class
+        function Person(){
+            this.age = 0;
+            setInterval(() => {
+                this.age++; // |this| properly refers to the Person object
+                // Please Access Through Console
+            }, 1000);
+        }
+
+        var p = new Person();
+
+        // Invoked through call or apply
+        var adder = {
+            base: 1,
+            add: function(a) {
+                var f = v => v + this.base;
+                return f(a);
+            },
+
+            addThruCall: function(a) {
+                //this still belongs to the adder, not b
+                var f = v => v + this.base;
+                var b = {
+                    base: 2
+                };
+                return f.call(b, a);
+            }
+        };
+
+        console.log(adder.add(1));         // This would log 2
+        console.log(adder.addThruCall(1)); // This would log 2 still
+
+        //No binding of arguments
+        var arguments = [1, 2, 3];
+        var arr = () => arguments[0];
+
+        arr(); // 1
+
+        function foo(n) {
+            console.log(arguments); // 3 , the n value
+            var f = () => arguments[0] + n; // foo's implicit arguments binding. arguments[0] is n
+            return f();
+        }
+
+        console.log(foo(3)); // 6
+
+        function foo2(n) { 
+            var f = (...args) => args[0] + n;
+            return f(10); 
+        }
+        console.log(foo2(1)); // 6
+    </script>
+</html>

@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+
+        assert(true, "========== Naming ===========");
+        // unnamed
+        let Rectangle = class {
+            constructor(height, width) {
+                this.height = height;
+                this.width = width;
+            }
+        };
+        assert(true, Rectangle.name); // output: "Rectangle"
+
+        // named
+        let Rectanglex = class Rectanglex2 {
+            constructor(height, width) {
+                this.height = height;
+                this.width = width;
+            }
+        };
+
+        assert(true, Rectanglex.name); // output: "Rectanglex2"
+
+        assert(true, "========== Getter Methods ===========");
+        class Square {
+            constructor(height, width) {
+                this.height = height;
+                this.width = width;
+            }
+            // Getter
+            get area() {
+                return this.calcArea();
+            }
+            // Method
+            calcArea() {
+                return this.height * this.width;
+            }
+        }
+
+        const square = new Square(10, 10);
+
+        assert(true, "Area >> " + square.area); // 100
+
+        assert(true, "========== Static Methods ===========");
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            static distance(a, b) {
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+
+                return Math.hypot(dx, dy);
+            }
+        }
+
+        const p1 = new Point(5, 5);
+        const p2 = new Point(10, 10);
+        assert(true, p1.distance); //undefined
+        assert(true, p2.distance); //undefined
+
+        assert(true,Point.distance(p1, p2)); // 7.0710678118654755
+
+
+        assert(true, "========== Autoboxing This on Method ===========");
+        //When a static or prototype method is called without a value for this,
+        //the this value will be undefined inside the method.
+        //Autoboxing will not happen in strict mode, the this value remains as passed.
+
+
+        class Animal { 
+            speak() {
+                return this;
+            }
+            static eat() {
+                return this;
+            }
+        }
+
+        let obj = new Animal();
+        assert(true, obj.speak()); // Animal {}
+        console.log(obj.speak());
+        let speak = obj.speak;
+        assert(true,speak()); // undefined
+
+        Animal.eat() // class Animal
+        let eat = Animal.eat;
+        assert(true,eat()); // undefined
+
+        assert(true, "===== Private field declarations =====");
+
+        class PrivateRectangle {
+            #height = 0;
+            #width;
+            constructor(height, width) {    
+                this.#height = height;
+                this.#width = width;
+            }
+
+            // Getter
+            get area() {
+                return this.calcArea();
+            }
+            // Method
+            calcArea() {
+                return this.#height * this.#width;
+            }
+        }
+
+        var pr = new PrivateRectangle(10,10);
+
+        assert(true, "Area >> " + pr.area); // 100
+
+        assert(true, "===== Sub classing with extends =====");
+        class Mammal { 
+            constructor(name) {
+                this.name = name;
+            }
+  
+            speak() {
+                 return `${this.name} makes a noise.`;
+            }
+        }
+
+        class Dog extends Mammal {
+            constructor(name) {
+                super(name); // call the super class constructor and pass in the name parameter
+            }
+
+            speak() {
+                return `${this.name} barks.`;
+            }
+       }
+
+       let d = new Dog('Mitzie');
+       assert(true, d.speak()); // Mitzie barks.
+    </script>
+</html>

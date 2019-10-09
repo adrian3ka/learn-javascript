@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log("-------------Scoping rules-----------------");
+        (function () {
+            var x = 1;
+            {
+                var x = 2;  // same variable!
+                console.log(x);  // 2
+            }
+            console.log(x);  // 2
+        })();
+
+        (function () {
+            let x = 1;
+            {
+                let x = 2;  // different variable
+                console.log(x);  // 2
+            }
+            console.log(x);  // 1
+        })();
+
+        var x = 'global';
+        let y = 'global';
+        console.log(this.x); // "global"
+        console.log(this.y); // undefined
+
+        console.log("-------------Emulating private members-----------------");
+        var Thing;
+
+        {
+            let privateScope = new WeakMap();
+            let counter = 0;
+
+            Thing = function() {
+                this.someProperty = 'foo';
+    
+                privateScope.set(this, {
+                    hidden: ++counter,
+                });
+            };
+
+            Thing.prototype.showPublic = function() {
+                return this.someProperty;
+            };
+
+            Thing.prototype.showPrivate = function() {
+                return privateScope.get(this).hidden;
+            };
+        }
+
+        console.log(typeof privateScope);
+        // "undefined"
+
+        var thing = new Thing();
+
+        console.log(thing);
+        // Thing {someProperty: "foo"}
+
+        console.log(thing.showPublic());
+        // "foo"
+
+        console.log(thing.showPrivate());
+        // 1
+
+        var a = 1;
+        var b = 2;
+
+        if (a === 1) {
+            var a = 11; // the scope is global
+            let b = 22; // the scope is inside the if-block
+
+            console.log(a);  // 11
+            console.log(b);  // 22
+        }
+
+        console.log(a); // 11
+        console.log(b); // 2
+
+        // prints out 'undefined'
+        console.log(typeof undeclaredVariable);
+        // results in a 'ReferenceError'
+        console.log(typeof i);
+        let i = 10;
+    </script>
+</html>

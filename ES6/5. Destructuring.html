@@ -1,0 +1,244 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+
+        console.log("========== Destructuring ===========");
+        var a, b, rest;
+        [a, b] = [10, 20];
+        console.log(a); // 10
+        console.log(b); // 20
+        console.log("------------------------------------");
+        [a, b, ...rest] = [10, 20, 30, 40, 50];
+        console.log(a); // 10
+        console.log(b); // 20
+        console.log(rest); // [30, 40, 50]
+        console.log("------------------------------------");
+        ({ a, b } = { a: 10, b: 20 });
+        console.log(a); // 10
+        console.log(b); // 20
+        console.log("------------------------------------");
+        // Stage 4(finished) proposal
+        ({a, b, ...rest} = {a: 10, b: 20, c: 30, d: 40});
+        console.log(a); // 10
+        console.log(b); // 20
+        console.log(rest); // {c: 30, d: 40}
+        console.log("------------------------------------");
+        var x = [1, 2, 3, 4, 5];
+        var [y, z] = x;
+        console.log(y); // 1
+        console.log(z); // 2
+        console.log("------------------------------------");
+        var foo = ['one', 'two', 'three'];
+        var [red, yellow, green] = foo;
+        console.log(red); // "one"
+        console.log(yellow); // "two"
+        console.log(green); // "three"
+        console.log("------------------------------------");
+        var a, b;
+        [a, b] = [1, 2];
+        console.log(a); // 1
+        console.log(b); // 2
+        console.log("------------------------------------");
+        [a=5, b=7] = [1];
+        console.log(a); // 1
+        console.log(b); // 7
+        console.log("------------------------------------");
+        var a = 1;
+        var b = 3;
+        [a, b] = [b, a];
+        console.log(a); // 3
+        console.log(b); // 1
+        console.log("------------------------------------");
+        function f() {
+            return [1, 2];
+        }
+        var a, b; 
+        [a, b] = f(); 
+        console.log(a); // 1
+        console.log(b); // 2
+        console.log("------------------------------------");
+        function f() {
+            return [1, 2, 3];
+        }
+
+        var [a, , b] = f();
+        console.log(a); // 1
+        console.log(b); // 3
+        console.log("------------------------------------");
+        // SyntaxError: rest element may not have a trailing comma
+        var [a, ...b] = [1, 2, 3];
+        console.log(a); // 1
+        console.log(b); // [2, 3]
+        console.log("------------------------------------");
+        function parseProtocol(url) { 
+            var parsedURL = /^(\w+)\:\/\/([^\/]+)\/(.*)$/.exec(url);
+            if (!parsedURL) {
+                return false;
+            }
+            console.log(parsedURL); // ["https://developer.mozilla.org/en-US/Web/JavaScript", "https", "developer.mozilla.org", "en-US/Web/JavaScript"]
+
+            var [, protocol, fullhost, fullpath] = parsedURL;
+            return protocol;
+        }
+        console.log(parseProtocol('https://developer.mozilla.org/en-US/Web/JavaScript')); // "https"
+
+        console.log("------------------------------------");
+        var o = {p: 42, q: true};
+        var {p, x, q} = o;
+
+        console.log(p); // 42
+        console.log(x); // undefined
+        console.log(q); // true
+
+        console.log("------------------------------------");
+        var o = {p: 42, q: true};
+        var {p: foo, q: bar} = o;
+ 
+        console.log(foo); // 42 
+        console.log(bar); // true
+
+        console.log("----------Default Values-----------");
+        var {a = 10, b = 5} = {a: 3};
+
+        console.log(a); // 3
+        console.log(b); // 5
+
+        console.log("----------Assigning to new variables names and providing default values-----------");
+        var {a: aa = 10, b: bb = 5} = {a: 3};
+
+        console.log(aa); // 3
+        console.log(bb); // 5
+
+
+        console.log("----------Unpacking fields from objects passed as function parameter-----------");
+        var user = {
+            id: 42,
+            displayName: 'jdoe',
+            fullName: {
+                firstName: 'John',
+                lastName: 'Doe'
+            }
+        };
+
+        function userId({id}) {
+            return id;
+        }
+
+        function whois({displayName, fullName: {firstName: name}}) {
+            return `${displayName} is ${name}`;
+        }
+
+        console.log(userId(user)); // 42
+        console.log(whois(user));  // "jdoe is John"
+
+        console.log("----------Setting a function parameter's default value-----------");
+        function drawChart({size = 'big', coords = {x: 0, y: 0}, radius = 25} = {}) {
+            console.log(size, coords, radius);
+            // do some chart drawing
+        }
+
+        drawChart({
+            coords: {x: 18, y: 30},
+            radius: 30
+        });
+
+        console.log("----------Nested object and array destructuring-----------");
+        const metadata = {
+            title: 'Scratchpad',
+            translations: [
+                {
+                    locale: 'de',
+                    localization_tags: [],
+                    last_edit: '2014-04-14T08:43:37',
+                    url: '/de/docs/Tools/Scratchpad',
+                    title: 'JavaScript-Umgebung'
+                }
+            ],
+            url: '/en-US/docs/Tools/Scratchpad'
+        };
+
+        let {
+            title: englishTitle, // rename
+            translations: [
+                {
+                    title: localeTitle, // rename
+                },
+            ],
+        } = metadata;
+
+        console.log(englishTitle); // "Scratchpad"
+        console.log(localeTitle);  // "JavaScript-Umgebung"
+
+
+        console.log("----------For of iteration and destructuring-----------");
+        var people = [
+            {
+                name: 'Mike Smith',
+                family: {
+                    mother: 'Jane Smith',
+                    father: 'Harry Smith',
+                    sister: 'Samantha Smith'
+                },
+                age: 35
+            },
+            {
+                name: 'Tom Jones',
+                family: {
+                    mother: 'Norah Jones',
+                    father: 'Richard Jones',
+                    brother: 'Howard Jones'
+                },
+                age: 25
+            }
+        ];
+
+        for (var {name: n, family: {father: f}} of people) {
+            console.log('Name: ' + n + ', Father: ' + f);
+        }
+        console.log("------------Computed object property names and destructuring------------");
+        let key = 'z';
+        let {[key]: fooz} = {z: 'bar'};
+
+        console.log(fooz); // "bar"
+
+        console.log("------------Rest in Object Destructuring----------");
+        let {ax, bx, ...restValue} = {a: 10, b: 20, c: 30, d: 40}
+        console.log(ax); // 10 
+        console.log(bx); // 20 
+        console.log(restValue); // { c: 30, d: 40 }
+
+        console.log("------------Invalid JavaScript identifier as a property name---------");
+        const fooza = { 'fizz-buzz': true };
+        const { 'fizz-buzz': fizzBuzz } = fooza;
+
+        console.log(fizzBuzz); // "true"
+
+        console.log("------------Combined Array and Object Destructuring---------");
+        const props = [
+            { id: 1, name: 'Fizz'},
+            { id: 2, name: 'Buzz'},
+            { id: 3, name: 'FizzBuzz'}
+        ];
+
+        const [,, { name }] = props;
+
+        console.log(name); // "FizzBuzz"
+    </script>
+</html>

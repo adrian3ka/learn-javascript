@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+
+        function sum(x, y, z) {
+            return x + y + z;
+        }
+
+        const numbers = [1, 2, 3];
+
+        console.log(sum(...numbers)); // expected output: 6
+
+        console.log(sum.apply(null, numbers)); // expected output: 6
+        console.log("-------------Apply for new-----------------");
+        function applyAndNew(constructor, args) {
+            function partial () {
+                return constructor.apply(this, args);
+            };
+            if (typeof constructor.prototype === "object") {
+                partial.prototype = Object.create(constructor.prototype);
+            }
+            return partial;
+        }
+
+
+        function myConstructor () {
+            console.log("arguments.length: " + arguments.length);
+            console.log(arguments);
+            this.prop1="val1";
+            this.prop2="val2";
+        };
+
+        var myArguments = ["hi", "how", "are", "you", "mr", null];
+        var myConstructorWithArguments = applyAndNew(myConstructor, myArguments);
+
+        console.log(new myConstructorWithArguments);
+        // (internal log of myConstructor):           arguments.length: 6
+        // (internal log of myConstructor):           ["hi", "how", "are", "you", "mr", null]
+        // (log of "new myConstructorWithArguments"): {prop1: "val1", prop2: "val2"}
+
+        console.log("-------------Spread in array literals--------------");
+        var parts = ['shoulders', 'knees']; 
+        var lyrics = ['head', ...parts, 'and', 'toes']; 
+        // ["head", "shoulders", "knees", "and", "toes"]
+
+        console.log("-------------Spread in object literals--------------");
+        var obj1 = { foo: 'bar', x: 42 };
+        var obj2 = { foo: 'baz', y: 13 };
+
+        var clonedObj = { ...obj1 };
+        // Object { foo: "bar", x: 42 }
+
+        var mergedObj = { ...obj1, ...obj2 };
+        // Object { foo: "baz", x: 42, y: 13 }
+        console.log(mergedObj);
+    </script>
+</html>

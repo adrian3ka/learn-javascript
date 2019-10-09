@@ -1,0 +1,201 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log("---Iterating over an Array---");
+
+        const iterable = [10, 20, 30];
+
+        for (const value of iterable) {
+            console.log(value);
+        }
+        // 10
+        // 20
+        // 30
+
+        for (let value of iterable) {
+            value += 1;
+            console.log(value);
+        }
+        // 11
+        // 21
+        // 31
+
+        for (var value of iterable) {
+            value += 1;
+            console.log(value);
+        }
+        // 11
+        // 21
+        // 31
+
+        console.log("---Iterating over a String---");
+        const iterableString = 'boo';
+
+        for (const value of iterableString) {
+            console.log(value);
+        }
+        // "b"
+        // "o"
+        // "o"
+
+        console.log("---Iterating over a TypedArray---");
+        const iterableTypedArray = new Uint8Array([0x00, 0xff]);
+
+        for (const value of iterableTypedArray) {
+            console.log(value);
+        }
+        // 0
+        // 255
+
+        console.log("---Iterating over a Map---");
+        const iterableMap = new Map([['a', 1], ['b', 2], ['c', 3]]);
+
+        for (const entry of iterableMap) {
+            console.log(entry);
+        }
+        // ['a', 1]
+        // ['b', 2]
+        // ['c', 3]
+
+        for (const [key, value] of iterableMap) {
+            console.log(value);
+        }
+        // 1
+        // 2
+        // 3
+        console.log("---Iterating over a Set---");
+        const iterableSet = new Set([1, 1, 2, 2, 3, 3, 4, 1]); // Unique Value
+
+        for (const value of iterableSet) {
+            console.log(value);
+        }
+        // 1
+        // 2
+        // 3
+
+        console.log('---Iterating over the arguments object---');
+        (function() {
+            for (const argument of arguments) {
+                console.log(argument);
+            }
+        })(1, 2, 3);
+        // 1
+        // 2
+        // 3
+        console.log(printTitle`Closing iterators`);
+        function* foo(){ 
+            yield 1; 
+            yield 2; 
+            yield 3; 
+        }; 
+
+        for (const o of foo()) { 
+            console.log(o); 
+            break; // closes iterator, execution continues outside of the loop
+        }
+        console.log('done');
+
+        console.log(printTitle`Iterating over generators`);
+        function* fibonacci() { // a generator function
+            let [prev, curr] = [0, 1];
+            while (true) {
+                [prev, curr] = [curr, prev + curr];
+                yield curr;
+            }
+        }
+
+        for (const n of fibonacci()) {
+            console.log(n);
+            // truncate the sequence at 1000
+            if (n >= 10000) {
+                break;
+            }
+        }
+        console.log(printTitle`Async iterators`);
+        let range = {
+            from: 1,
+            to: 5,
+
+            [Symbol.iterator]() {
+                return {
+                    current: this.from,
+                    last: this.to,
+
+                    next() { // (2)
+                        if (this.current <= this.last) {
+                            return { done: false, value: this.current++ };
+                        } else {
+                            return { done: true };
+                        }
+                    }
+                };
+            }
+        };
+
+        for(let value of range) {
+            console.log(value); // expected output: 1, then 2, then 3, then 4, then 5
+        }
+
+        console.log(printTitle`Iterating over other iterable objects`);
+        const iterableObject = {
+            [Symbol.iterator]() {
+                return {
+                    i: 0,
+                    next() {
+                        if (this.i < 3) {
+                            return { value: this.i++, done: false };
+                        }
+                        return { value: undefined, done: true };
+                    }
+                };
+            }
+        };
+
+        for (const value of iterableObject) {
+            console.log(value);
+        }
+        // 0
+        // 1
+        // 2
+        console.log(printTitle`Difference between for...of and for...in`);
+        Object.prototype.objCustom = function() {}; 
+        Array.prototype.arrCustom = function() {};
+
+        const iterableData = [3, 5, 7];
+        iterableData.foo = 'hello';
+
+        for (const i in iterableData) {
+            //It logs array indexes as well as arrCustom and objCustom
+            console.log(i); // logs 0, 1, 2, "foo", "arrCustom", "objCustom"
+        }
+
+        for (const i in iterableData) {
+            if (iterableData.hasOwnProperty(i)) {
+                console.log(i); // logs 0, 1, 2, "foo"
+            }
+        }
+
+        for (const i of iterableData) {
+            console.log(i); // logs 3, 5, 7
+        }
+    </script>
+</html>
