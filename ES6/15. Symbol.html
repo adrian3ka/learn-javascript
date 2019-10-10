@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+        <script src="./lib/cookie.js"></script>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var sym1 = Symbol();
+        var sym2 = Symbol('foo');
+        var sym3 = Symbol('foo');
+        /*The above code creates three new symbols. Note that Symbol("foo") 
+          does not coerce the string "foo" into a symbol. It creates a new symbol each time:*/
+
+        console.log(sym2 === sym3); // false
+        console.log(printTitle `Basic Symbol Example` );
+        console.log(typeof Symbol() === 'symbol');
+        console.log(typeof Symbol('foo') === 'symbol');
+        console.log(typeof Symbol.iterator === 'symbol');
+
+        console.log(printTitle `Symbols and for...in iteration`);
+        var obj = {};
+
+        obj[Symbol('a')] = 'a';
+        obj[Symbol.for('b')] = 'b';
+        obj['c'] = 'c';
+        obj.d = 'd';
+
+        for (var i in obj) {
+             console.log(i); // logs "c" and "d"
+        }
+
+        console.log(printTitle `Symbols and JSON.stringify()`);
+        console.log(JSON.stringify({[Symbol('foo')]: 'foo'})); // '{}'
+
+        console.log(printTitle `Symbol wrapper objects as property keys`);
+        var sym = Symbol('foo');
+        var obj = {[sym]: 1};
+        console.log(obj[sym]);            // 1
+        console.log(obj[Object(sym)]);    // still 1
+    </script>
+</html>

@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+        <script src="./lib/cookie.js"></script>
+    </head>
+    <body>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log(printTitle `Return Values in Reflect vs Reflection Through Object`);
+        var target = { foo: 'bar', baz: 'wat' }
+        var x = Object.defineProperty(target, 'new_value', { value: 'bar' });
+        try {
+            console.log(x);
+            // yay!
+        } catch (e) {
+            // oops.
+        }
+
+        var yay = Reflect.defineProperty(target, 'new_value_2', { value: 'bar' })
+        if (yay) {
+            // yay!
+            console.log(yay);
+        } else {
+            // oops.
+        }
+        console.log(target);
+        delete target.foo
+        console.log(target)
+        // <- { baz: 'wat' }
+
+        Reflect.deleteProperty(target, 'baz')
+        console.log(target)
+        
+        console.log(printTitle `ownKeys`);
+        var x = { foo: 1, bar: 2 };
+        console.log(Reflect.ownKeys(x));
+        console.log(Object.getOwnPropertyNames(x));
+
+        // Reflect throws an exception if the parameter is not an Object
+        try {
+            console.log(Reflect.ownKeys(1));
+        }
+        catch (e) {
+            console.log(e);
+        }
+        console.log(Object.getOwnPropertyNames(1));
+    </script>
+</html>

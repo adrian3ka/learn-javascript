@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log(printTitle `Using WeakMap` );
+        // Map is preventing the key object to be garbage collected, while WeakMap doesn't prevent it
+        var wm1 = new WeakMap(),
+            wm2 = new WeakMap(),
+            wm3 = new WeakMap();
+        var o1 = {},
+            o2 = function() {},
+            o3 = window;
+
+        wm1.set(o1, 37);
+        wm1.set(o2, 'azerty');
+        wm2.set(o1, o2); // a value can be anything, including an object or a function
+        wm2.set(o3, undefined);
+        wm2.set(wm1, wm2); // keys and values can be any objects. Even WeakMaps!
+
+        console.log(wm1.get(o2)); // "azerty"
+        console.log(wm2.get(o2)); // undefined, because there is no key for o2 on wm2
+        console.log(wm2.get(o3)); // undefined, because that is the set value
+
+        console.log(wm1.has(o2)); // true
+        console.log(wm2.has(o2)); // false
+        console.log(wm2.has(o3)); // true (even if the value itself is 'undefined')
+
+        wm3.set(o1, 37);
+        console.log(wm3.get(o1)); // 37
+
+        wm1.has(o1); // true
+        wm1.delete(o1);
+        console.log(wm1.has(o1)); // false
+
+        /*The WeakSet is weak: References to objects in the collection are held weakly.
+          If there is no other reference to an object stored in the WeakSet, 
+          they can be garbage collected. 
+          That also means that there is no list of current objects stored in the collection.
+          WeakSets are not enumerable.*/
+    </script>
+</html>

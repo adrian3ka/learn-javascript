@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log(printTitle `Examples using the iteration protocols` );
+
+        var someString = 'hi';
+        console.log(typeof someString[Symbol.iterator]); // "function"
+
+        var iterator = someString[Symbol.iterator]();
+        iterator + '';                               // "[object String Iterator]"
+ 
+        console.log(iterator.next());                // { value: "h", done: false }
+        console.log(iterator.next());                // { value: "i", done: false }
+        console.log(iterator.next());                // { value: undefined, done: true }
+
+        var someString = new String('hi');  // need to construct a String object explicitly to avoid auto-boxing
+
+        someString[Symbol.iterator] = function() {
+            return { // this is the iterator object, returning a single element, the string "bye"
+                next: function() {
+                    if (this._first) {
+                        this._first = false;
+                        return { value: 'bye', done: false };
+                    } else {
+                        return { done: true };
+                    }
+                },
+                _first: true
+            };
+        };
+        console.log([...someString]); // ["bye"]
+        console.log(someString + ''); // "hi"
+
+        console.log(printTitle `Infinite iterator`);
+        function idMaker() {
+            var index = 0;
+    
+            return {
+               next: function(){
+                   return {value: index++, done: false};
+               }
+            };
+        }
+
+        var it = idMaker();
+
+        console.log(it.next().value); // '0'
+        console.log(it.next().value); // '1'
+        console.log(it.next().value); // '2'
+        // ...
+
+        console.log(printTitle `With a generator`);
+        function* makeSimpleGenerator(array) {
+            var nextIndex = 0;
+    
+            while (nextIndex < array.length) {
+                yield array[nextIndex++];
+            }
+        }
+
+        var gen = makeSimpleGenerator(['yo', 'ya']);
+
+        console.log(gen.next().value); // 'yo'
+        console.log(gen.next().value); // 'ya'
+        console.log(gen.next().done);  // true
+
+    </script>
+</html>

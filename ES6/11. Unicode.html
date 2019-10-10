@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        console.log(printTitle `Unicode` );
+
+        var regex1 = new RegExp('\u{61}');
+        var regex2 = new RegExp('\u{61}', 'u');
+
+        console.log(regex1.unicode);
+        // expected output: false
+
+        console.log(regex2.unicode);
+        // expected output: true
+
+        console.log(regex1.source);
+        // expected output: "a"
+
+        console.log(regex2.source);
+        // expected output: "a"
+
+
+    </script>
+</html>

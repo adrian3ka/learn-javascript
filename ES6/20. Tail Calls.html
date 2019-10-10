@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+        <script src="./lib/cookie.js"></script>
+    </head>
+    <body>
+    </body>
+
+    <script>
+        function printTitle(title) {
+            return `---${ title }---`;
+        }
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+        //only theory or what --> all still Maximum call stack size exceeded
+
+        /*Calls in tail-position are guaranteed to not grow the stack unboundedly. Makes recursive algorithms safe in the face of unbounded inputs.*/
+        function factorial(n, acc = 1) {
+            if (n <= 1) return acc;
+            return factorial(n - 1, n * acc);
+        }
+
+        // Stack overflow in most implementations today,
+        // but safe on arbitrary inputs in ES6
+        //console.log(factorial(100000))
+
+        var bigArray = [];
+
+        for (var i = 0 ; i < 10000 ; i++) {
+            bigArray.push(1);
+        }
+        function size ([x, ...xs]) {
+            return x === undefined ? 0 : 1 + size(xs);
+        }
+        // the array to be passed depdend on previous function call
+        // stack 
+        // size ([1, 2, 3]) : 
+        // -> 1 + size ([2,3])
+        // --> 1 + size ([3])
+        // ---> 1 + size ([]) = 0
+        // --> 1 + 0 = 1
+        // -> 1 + 1 = 2
+        // 1 + 2 = 3 
+
+        function sizeOptimize ([x, ...xs], count = 0) {
+            return x === undefined ? count + 1 : size (xs, count +1);
+        }
+
+        // we only focus on count
+        // stack
+        // size ([1,2,3], 0)
+        // size ([2,3], 1)
+        // size ([3], 2)
+        // size ([], 3) return 3;
+    </script>
+</html>
