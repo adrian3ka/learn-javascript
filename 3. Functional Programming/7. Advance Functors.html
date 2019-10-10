@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        const dragons = [
+            { name: "Fluffykins", health: 70 },
+            { name: "Deathlord", health: 65000 },
+            { name: "Little Pizza", health: 2 },
+        ]
+
+        const names = dragons.map((dragon, i) => dragon.name)
+                             .map((dragonName) => dragonName.length);
+
+        console.log(names);
+    </script>
+</html>

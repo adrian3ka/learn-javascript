@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var animals = [
+            { name: "Fluffykins", species: "rabbit" },
+            { name: "Caro", species: "dog" },
+            { name: "Hamilton", species: "dog" },
+            { name: "Harold", species: "fish" },
+            { name: "Ursula", species: "cat" },
+            { name: "Jimmy", species: "fish" },
+        ];
+
+        var names = [];
+        for (var i = 0 ; i < animals.length; i++) {
+            names.push(animals[i].name);
+        }
+        console.log(names);
+
+        var names = animals.map(function(animal) {
+            return animal.name;
+        });
+        console.log(names);
+
+        var names = animals.map( (animal) => animal.name);
+        console.log(names);
+
+    </script>
+</html>

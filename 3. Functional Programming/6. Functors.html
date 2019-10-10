@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        //suck, how about writing minus1 ?
+        function plus1(value) {
+            if (Array.isArray(value)) {
+                var newArray = [];
+                for (var i = 0 ; i < value.length ; i++) 
+                    newArray[i] = value[i] + 1;
+                return newArray
+            }
+            if(typeof value === 'string') {
+                var chars = value.split('')
+                var newCharArray = []
+                for (var i = 0 ; i < chars.length ; i ++) {
+                    newCharArray[i] = String.fromCharCode(chars[i].charCodeAt(0) + 1)
+                }
+                return newCharArray.join('');
+            }
+            return value + 1;
+        }
+
+        console.log(plus1(3)); //4
+        console.log(plus1([3,4])); //4, 5
+        console.log(plus1("ABC")); //BCD
+
+        Number.prototype.map = function (fn){return fn(this)}
+        String.prototype.map = function (fn) {
+            var chars = this.split("")
+            return chars.map(function(char) {
+                return String.fromCharCode(fn(char.charCodeAt(0)))
+            }).join("")
+        }
+        function simplePlus1 (value) {
+            return value + 1;
+        }
+        function simpleMinus1 (value) {
+            return value - 1;
+        }
+
+        
+        console.log((3).map(simplePlus1)); //4
+        console.log([3,4].map(simplePlus1)); //4, 5
+        console.log("ABC".map(simplePlus1)); //BCD
+        console.log("XYZ".map(simpleMinus1)); //WXY
+    </script>
+</html>

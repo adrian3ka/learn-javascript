@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var orders = [
+            { amount: 250 },
+            { amount: 400 },
+            { amount: 100 },
+            { amount: 325 },
+        ];
+
+        var totalAmount = 0;
+        for (var i = 0 ; i < orders.length; i++) {
+            totalAmount += orders[i].amount
+        }
+
+        console.log(totalAmount);
+
+        var totalAmount = orders.reduce(function(sum, order){
+            console.log("hello", sum, order);
+            return sum + order.amount;
+        }, 0); // 0 is starting amount 
+        // change it to 1, sum will be 1076;
+        console.log(totalAmount);
+
+
+
+        var totalAmount = orders.reduce((sum, order) => { return sum + order.amount }, 0);
+        // 0 is starting amount 
+        // change it to 1, sum will be 1076;
+        console.log(totalAmount);
+    </script>
+</html>

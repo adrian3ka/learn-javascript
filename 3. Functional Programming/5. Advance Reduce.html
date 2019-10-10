@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>Test Suite</title>
+        <style>
+            #results li.pass { color: green; }
+            #results li.fail { color: red; }
+        </style>
+    </head>
+    <body>
+        <ul id="results"></ul>
+    </body>
+
+    <script>
+        function assert(value, desc) {
+            var li = document.createElement("li");
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(desc));
+            document.getElementById("results").appendChild(li);
+        }
+
+        var customers = [
+            ['mark johansson', 'waffle iron', 80, 2],
+            ['mark johansson', 'blender', 200, 1],
+            ['mark johansson', 'knife', 10, 4],
+            ['Nikita Smith', 'waffle iron', 80, 1],
+            ['Nikita Smith', 'knife', 10, 2],
+            ['Nikita Smith', 'pot', 20, 3],
+        ];
+
+        var output = customers.reduce((customers, line) => {
+            customers[line[0]] = customers[line[0]] || [];
+            customers[line[0]].push({
+                name: line[1],
+                price: line[2],
+                quantity: line[3],
+            })
+
+            return customers;
+        }, {})
+
+        console.log(JSON.stringify(output, null, 2));
+    </script>
+</html>
