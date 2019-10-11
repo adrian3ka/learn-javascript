@@ -1,0 +1,9 @@
+Write your own “reduce” function, the behaviour should be like https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+
+Write your own “map” function using reduce function that you wrote https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Map
+
+Write your own “filter” function using reduce function that you wrote https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Filter
+
+Write your own “reduceRight” function using reduce function that you wrote
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/ReduceRight 
+
