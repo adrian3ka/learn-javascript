@@ -2,6 +2,9 @@ var express = require('express');
 var formidable = require('formidable');
 var fortune = require('./lib/fortune.js');
 require("./lib/prototype.js");
+var jqupload = require('jquery-file-upload-middleware');
+const util = require('util')
+
 var app = express();
 
 app.set('port', process.env.PORT || 3000);
@@ -44,6 +47,7 @@ app.get('/newsletter', function (req, res) {
 
 app.use('/upload', function (req, res, next) {
     var now = Date.now();
+    console.log("Uploading File ...");
     jqupload.fileHandler({
         uploadDir: function () {
             return __dirname + '/public/uploads/' + now;
@@ -98,6 +102,11 @@ app.get('/headers', function (req, res) {
     var s = '';
     for (var name in req.headers) s += name + ': ' + req.headers[name] + '\n';
     res.send(s);
+});
+
+
+app.get('/thank-you', function (req, res) {
+    res.render('thank-you');
 });
 
 app.get('/about', function (req, res) {
