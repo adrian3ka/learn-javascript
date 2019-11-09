@@ -1,0 +1,98 @@
+<html>
+
+<body>
+</body>
+</html>
+
+<script>
+    function printLine() {
+        console.log("----------------------------");
+    }
+
+    var article = {
+        'title': 'Title',
+        'body': 'Body'
+    };
+    document.body.innerHTML = `
+  <section>
+    <header>
+      <h1>The HTML5 Blog</h1>
+    </header>
+    <article>
+      <h2>${article.title}</h2>
+      ${article.body}
+    </article>
+    <footer>
+      <p>copyright ${new Date().getYear()} | The HTML5 Blog</p>
+    </footer>
+  </section>`
+
+    printLine()
+
+    function logActivity(name = "Shane McConkey", activity = "skiing") {
+        console.log(`${name} loves ${activity}`)
+    }
+
+    logActivity();
+    logActivity('Adrian', 'Coding');
+
+    var defaultPerson = {
+        name: {
+            first: "Shane",
+            last: "McConkey"
+        },
+        favActivity: "skiing"
+    }
+
+    printLine()
+
+    function logActivityObject(p = defaultPerson) {
+        console.log(`${p.name.first} loves ${p.favActivity}`)
+    }
+
+    logActivityObject();
+    printLine()
+    var lordify = function (firstname) {
+        return `${firstname} of Canterbury`
+    }
+    console.log(lordify("Dale"))
+    console.log(lordify("Daryle"))
+
+    var lordifyArrow = firstname =>
+        `${firstname} of Canterbury`
+    console.log(lordifyArrow("Daryle"))
+
+    printLine();
+
+    var _lordify = (firstName, land) => {
+        if (!firstName) {
+            throw new Error('A firstName is required to lordify')
+        }
+        if (!land) {
+            throw new Error('A lord must have a land')
+        }
+        return `${firstName} of ${land}`
+    }
+
+    console.log(_lordify("Kelly", "Sonoma"))
+    try {
+        console.log(_lordify("Dave"))
+    } catch (err) {
+        console.log(err)
+    }
+
+    printLine();
+
+    var tahoe = {
+        resorts: ["Kirkwood", "Squaw", "Alpine", "Heavenly", "Northstar"],
+        print: function (delay = 1000) {
+            setTimeout(() => {
+                    console.log(this.resorts.join(","))
+                }, delay
+            )
+        }
+    }
+    tahoe.print() // Kirkwood, Squaw, Alpine, Heavenly, Northstar
+
+
+</script>
