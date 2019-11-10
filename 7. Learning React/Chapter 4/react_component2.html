@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pure React Samples</title>
+
+    <style>
+        .box {
+            border: 1px solid;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- Target container -->
+<div id="react-container" class="box">
+</div>
+<div id="react-container2" class="box">
+</div>
+<div id="react-container3" class="box">
+</div>
+<!-- React library & ReactDOM-->
+<script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+<script>
+    class IngredientsList extends React.Component {
+        renderListItem(ingredient, i) {
+            return React.createElement("li", {key: i}, ingredient)
+        }
+
+        render() {
+            return React.createElement("ul", {className: "ingredients"},
+                this.props.items.map(this.renderListItem)
+            )
+        }
+    }
+
+    const items = [
+        "1 lb Salmon",
+        "1 cup Pine Nuts",
+        "2 cups Butter Lettuce",
+        "1 Yellow Squash",
+        "1/2 cup Olive Oil",
+        "3 cloves of Garlic"
+    ]
+
+    ReactDOM.render(
+        React.createElement(IngredientsList, {items}, null),
+        document.getElementById('react-container')
+    )
+
+    const IngredientsListStateless = props =>
+        React.createElement("ul", {className: "ingredients"},
+            props.items.map((ingredient, i) =>
+                React.createElement("li", { key: i }, ingredient)
+            )
+        )
+
+    ReactDOM.render(
+        React.createElement(IngredientsListStateless, {items}, null),
+        document.getElementById('react-container2')
+    )
+
+    const IngredientsListDestructuring = ({items}) =>
+        React.createElement("ul", {className: "ingredients"},
+            items.map((ingredient, i) =>
+                React.createElement("li", { key: i }, ingredient)
+            )
+        )
+    ReactDOM.render(
+        React.createElement(IngredientsListDestructuring, {items}, null),
+        document.getElementById('react-container3')
+    )
+</script>
+</body>
+</html>
