@@ -2,7 +2,7 @@
   "name": "",
   "version": "",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "express3-handlebars": "^0.5.2"
   },
   "devDependencies": {
